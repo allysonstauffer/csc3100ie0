@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 
 const users = {
   users_list: [
@@ -6,21 +7,29 @@ const users = {
     { id: "abc123", name: "Mac", job: "Bouncer" },
     { id: "ppp222", name: "Mac", job: "Professor" },
     { id: "yat999", name: "Dee", job: "Aspring actress" },
-    { id: "zap555", name: "Dennis", job: "Bartender" },
-  ],
+    { id: "zap555", name: "Dennis", job: "Bartender" }
+  ]
 };
 
 const app = express();
 const port = 8000;
 
+app.use(cors());
 app.use(express.json());
 
 const findUserByName = (name) => {
-  return users["users_list"].filter((user) => user["name"] === name);
+  return users["users_list"].filter(
+    (user) => user["name"] === name
+  );
 };
 
 const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
+
+// generate id on server
+const generateId = () => {
+  return Math.random().toString();
+};
 
 const addUser = (user) => {
   users["users_list"].push(user);
@@ -28,7 +37,9 @@ const addUser = (user) => {
 };
 
 const deleteUserById = (id) => {
-  const index = users["users_list"].findIndex((user) => user["id"] === id);
+  const index = users["users_list"].findIndex(
+    (user) => user["id"] === id
+  );
   if (index !== -1) {
     users["users_list"].splice(index, 1);
     return true;
@@ -38,7 +49,7 @@ const deleteUserById = (id) => {
 
 const findUserByNameAndJob = (name, job) => {
   return users["users_list"].filter(
-    (user) => user["name"] === name && user["job"] === job,
+    (user) => user["name"] === name && user["job"] === job
   );
 };
 
@@ -73,6 +84,7 @@ app.get("/users/:id", (req, res) => {
 
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
+  userToAdd.id = generateId(); // use genid when post request creates user
   addUser(userToAdd);
   res.status(201).send(userToAdd);
 });
@@ -88,5 +100,7 @@ app.delete("/users/:id", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+  console.log(
+    `Example app listening at http://localhost:${port}`
+  );
 });
