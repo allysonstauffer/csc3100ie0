@@ -10,5 +10,9 @@
     "start": "node backend.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^18.0.3",
+    "mongoose": "^9.10.2"
+  }
 }
